@@ -1,0 +1,14 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:ai.fd.thinklet.sdk.gesture////PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback///PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureDownToUp/#/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-down-to-up.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureLeftToRight/#/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-left-to-right.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureRightToLeft/#/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-right-to-left.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureUpToDown/#/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-up-to-down.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager///PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/GestureSensorManager/#ai.fd.thinklet.sdk.gesture.GestureSensorEventCallback/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/-gesture-sensor-manager.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/startTracking/#android.content.Context/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/start-tracking.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/stopTracking/#/PointingToDeclaration/gesture_v0.0.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/stop-tracking.md
+ai.fd.thinklet.sdk.gesture
+

@@ -1,0 +1,38 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            def owner = properties.getProperty("owner") ?: "unknown"
+            def repo = properties.getProperty("repository") ?: "unknown"
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/${owner}/${repo}")
+            credentials {
+                username = properties.getProperty("username") ?: "unknown"
+                password = properties.getProperty("token") ?: "unknown"
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
