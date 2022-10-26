@@ -26,21 +26,22 @@
   - [開発者モード](#開発者モード)
     - [API Document](#api-document-6)
     - [adb](#adb)
-- [プロジェクトへの適応](#プロジェクトへの適応)
-  - [Github Packages経由](#github-packages経由)
+- [プロジェクトでの利用方法](#プロジェクトでの利用方法)
+  - [GitHub Packages経由](#github-packages経由)
   - [更新方法](#更新方法)
 - [Tips](#tips)
-  - [AARのVersionの確認](#aarのversionの確認)
-  - [プロジェクトをminifyEnabledする場合](#プロジェクトをminifyenabledする場合)
+  - [AARのバージョンの確認](#aarのバージョンの確認)
+  - [プロジェクトを難読化する場合](#プロジェクトを難読化する場合)
+    - [minifyEnabled](#minifyenabled)
 
 # THINKLET App SDK
 THINKLET本体にインストールするアプリケーションに使用することができるSDKを提供します．
 
 # ご利用にあたって
-- このライブラリを許可なく再配布・再利用はしてはいけません．
-- 本レポジトリに含まれるドキュメントに明示的に許可されている用途以外の用途を禁止します．
-- お客様による本ライブラリの利用に関する保証を当社は行いません．
-- THINKLET実機のみ動作します．
+- このライブラリ（AARファイル）を許可なく再配布・再利用はしてはいけません．
+- 本レポジトリに含まれるドキュメントに明示的に許可されている用途以外の利用を禁止します．
+- 当社は、お客様による本ライブラリの利用に関しては保証しません．
+- ライブラリおよびこれを利用するサンプルソースコードは、THINKLET実機でのみ動作します．
 
 ## thinklet/sdk (documents)
 - ドキュメントは[CC BY-SA 4.0](./thinklet/LICENSE)の元で公開します
@@ -212,10 +213,10 @@ adbClient.disableAsync().thenAccept { disableResult ->
 }
 ```
 
-# プロジェクトへの適応
-## Github Packages経由
-- 詳細な設定は，[Github 公開されたパッケージの利用](https://docs.github.com/ja/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package) を参照ください．
-- また，指定したいVersionを調べる必要や，別途依存ライブラリを追加して頂くお願いがある場合は，`Release` に記載しておりますので，適宜ご確認ください．
+# プロジェクトでの利用方法
+## GitHub Packages経由
+- 詳細な設定は，[GitHub 公開されたパッケージの利用](https://docs.github.com/ja/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package) を参照ください．
+- また，バージョンの指定や依存ライブラリの追加が必要な場合は，`Release` に記載しておりますので，適宜ご確認ください．
 - 以下に，サンプルを記載します．
   - root `build.gradle`
 
@@ -249,7 +250,7 @@ adbClient.disableAsync().thenAccept { disableResult ->
 - その後，プロジェクトをクリーン＆ビルドしてください．
 
 # Tips
-## AARのVersionの確認
+## AARのバージョンの確認
 - 各種AARの `BuildConfig.VERSION` を参照してください．
 ```
 var msg =
@@ -260,8 +261,9 @@ var msg =
 Log.v(TAG, msg);
 ```
 
-## プロジェクトをminifyEnabledする場合
-- SDKに依存するライブラリまで難読化すると，期待する動作をしなくなります．`proguard-rules.pro` に以下を追記ください．
+## プロジェクトを難読化する場合
+### minifyEnabled
+- `minifyEnabled` を用いて，SDKに依存するライブラリまで難読化すると，期待する動作をしなくなります．`proguard-rules.pro` に以下を追記ください．
 
 ```.diff
 # If you keep the line number information, uncomment this to

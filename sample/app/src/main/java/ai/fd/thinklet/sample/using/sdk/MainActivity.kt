@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            // 第1キー
+            // 第1キー（アーム先端側のボタン）
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
                 if (!rawRecorder.prepare(this)) {
                     return false
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "--- Start Recording ---", Toast.LENGTH_SHORT).show()
                 Log.v(TAG, "--- Start Recording ---")
             }
-            // 第２キー
+            // 第2キー（中央ボタン）
             KeyEvent.KEYCODE_CAMERA -> {
                 val adbClient = AdbClient(this)
                 adbClient.disableAsync().thenRun {
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                     }, 1000)
                 }
             }
-            // 第3キー
+            // 第3キー（アーム先端から最も遠いボタン）
             KeyEvent.KEYCODE_VOLUME_UP -> {
                 LedClient(this).updateCameraLed(false)
                 rawRecorder.stop()
