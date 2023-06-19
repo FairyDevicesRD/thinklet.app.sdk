@@ -1,11 +1,15 @@
 package ai.fd.thinklet.sample.using.sdk
 
+import ai.fd.thinklet.sdk.audio.MicGainControl
 import ai.fd.thinklet.sdk.audio.RawAudioRecordWrapper
+import ai.fd.thinklet.sdk.gesture.ExperimentalFeature
 import ai.fd.thinklet.sdk.gesture.GestureSensorEventCallback
 import ai.fd.thinklet.sdk.gesture.GestureSensorManager
+import ai.fd.thinklet.sdk.gesture.WearSensorManager
 import ai.fd.thinklet.sdk.led.LedClient
 import ai.fd.thinklet.sdk.maintenance.adb.AdbClient
 import ai.fd.thinklet.sdk.maintenance.camera.Angle
+import ai.fd.thinklet.sdk.maintenance.language.Language
 import ai.fd.thinklet.sdk.maintenance.launcher.Extension
 import ai.fd.thinklet.sdk.maintenance.power.PowerController
 import android.Manifest
@@ -40,9 +44,20 @@ class MainActivity : AppCompatActivity() {
         get() = findViewById<Spinner>(R.id.spinner_camera_angles)
     private val buttonCameraUpdate
         get() = findViewById<Button>(R.id.button_camera_angle)
+    private val buttonCameraPortrait
+        get() = findViewById<Button>(R.id.button_camera_portrait)
+    private val buttonCameraLandscape
+        get() = findViewById<Button>(R.id.button_camera_landscape)
+
+    private val spinnerLanguages
+        get() = findViewById<Spinner>(R.id.spinner_languages)
+    private val buttonLanguageUpdate
+        get() = findViewById<Button>(R.id.button_update_language)
 
     private val textviewGesture
         get() = findViewById<TextView>(R.id.textview_gesture)
+    private val textviewWearing
+        get() = findViewById<TextView>(R.id.textview_wearing)
 
     private val buttonShutdown
         get() = findViewById<Button>(R.id.button_shutdown)
@@ -51,6 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     // audio
     private val randomFileName: String
+        @SuppressLint("SimpleDateFormat")
         get() = "6ch_48kHz_${SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(Date())}.raw"
     private val rawFileOutputStream: FileOutputStream
         get() = FileOutputStream(File(this.getExternalFilesDir(null), randomFileName))
@@ -89,6 +105,33 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    // Wearing
+    @OptIn(ExperimentalFeature::class)
+    private var wearSensorManager: WearSensorManager? = null
+
+    @SuppressLint("SetTextI18n")
+    @OptIn(ExperimentalFeature::class)
+    private val wearEventListener =
+        object : WearSensorManager.IProximityEvent, WearSensorManager.IGyroscopeEvent {
+            override fun onMounted() {
+                runOnUiThread {
+                    textviewWearing.text = "onMounted"
+                }
+            }
+
+            override fun onRemoved() {
+                runOnUiThread {
+                    textviewWearing.text = "onRemoved"
+                }
+            }
+
+            override fun onSideBlurred() {}
+
+            override fun onUpDownBlurred() {
+                Toast.makeText(this@MainActivity, "onUpDownBlurred", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -97,24 +140,33 @@ class MainActivity : AppCompatActivity() {
         registerEvent()
     }
 
+    @OptIn(ExperimentalFeature::class)
     override fun onResume() {
         super.onResume()
         gestureSensorManager.startTracking(this)
 
-        if (this.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
+        if (wearSensorManager == null) {
+            wearSensorManager = WearSensorManager(this)
+        }
+        wearSensorManager?.startTracking(wearEventListener, wearEventListener)
+
+        if (this.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED
         ) {
             val permissions = arrayOf(
                 Manifest.permission.RECORD_AUDIO
             )
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE)
         }
 
     }
 
+    @OptIn(ExperimentalFeature::class)
     override fun onPause() {
         super.onPause()
         gestureSensorManager.stopTracking()
+        wearSensorManager?.stopTracking()
+        wearSensorManager = null
     }
 
     @SuppressLint("MissingPermission")
@@ -122,6 +174,10 @@ class MainActivity : AppCompatActivity() {
         when (keyCode) {
             // 第1キー（アーム先端側のボタン）
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                // マイクゲインを最大に上げる
+                if (!MicGainControl(this).micGain(20)) {
+                    return false
+                }
                 if (!rawRecorder.prepare(this)) {
                     return false
                 }
@@ -143,9 +199,12 @@ class MainActivity : AppCompatActivity() {
             KeyEvent.KEYCODE_VOLUME_UP -> {
                 LedClient(this).updateCameraLed(false)
                 rawRecorder.stop()
+                // マイクゲインをリセットする
+                MicGainControl(this).resetMicGain()
                 Toast.makeText(this, "--- Stop Recording ---", Toast.LENGTH_SHORT).show()
                 Log.v(TAG, "--- Stop Recording ---")
             }
+
             KeyEvent.KEYCODE_POWER -> {
                 event?.startTracking()
             }
@@ -169,8 +228,8 @@ class MainActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             REQUEST_CODE -> {
-
             }
+
             else -> {}
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -189,6 +248,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerEvent() {
+        // Launcher Extension //
         buttonExtensionDefault.setOnClickListener {
             Extension().configure(
                 "com.android.deskclock",
@@ -207,9 +267,10 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "${Extension().configure()}", Toast.LENGTH_SHORT).show()
         }
 
-        val angles = listOf<String>("0", "90", "180", "270")
+        // Camera angle //
+        val angles = listOf("0", "90", "180", "270")
         val adapter =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, angles)
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, angles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCameraAngles.adapter = adapter
 
@@ -231,6 +292,45 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, Angle().current().toString(), Toast.LENGTH_SHORT).show()
         }
 
+        buttonCameraPortrait.setOnClickListener {
+            Angle().setPortrait()
+            if (!Angle().isPortrait()) {
+                return@setOnClickListener
+            }
+            val ang = Angle().current().toString()
+            spinnerCameraAngles.setSelection(angles.indexOf(ang))
+            Toast.makeText(this, ang, Toast.LENGTH_SHORT).show()
+        }
+
+        buttonCameraLandscape.setOnClickListener {
+            Angle().setLandscape()
+            if (!Angle().isLandscape()) {
+                return@setOnClickListener
+            }
+            val ang = Angle().current().toString()
+            spinnerCameraAngles.setSelection(angles.indexOf(ang))
+            Toast.makeText(this, ang, Toast.LENGTH_SHORT).show()
+        }
+
+        // Language //
+        val langClient = Language(this)
+        val locales = langClient.getAvailableLocales()
+        val adapterLang =
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                locales.map { it.displayLanguage })
+        adapterLang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerLanguages.adapter = adapterLang
+        val id = locales.indexOf(Locale.getDefault())
+        if (id > 0) {
+            spinnerLanguages.setSelection(id)
+        }
+        buttonLanguageUpdate.setOnClickListener {
+            langClient.updateRequest(locales[spinnerLanguages.selectedItemPosition])
+        }
+
+        // Power //
         buttonReboot.setOnClickListener {
             PowerController().reboot(this)
         }
@@ -241,11 +341,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dumpVersions() {
-        var msg =
+        val msg =
             "${ai.fd.thinklet.sdk.audio.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.audio.BuildConfig.VERSION}" + "\n" +
                     "${ai.fd.thinklet.sdk.gesture.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.gesture.BuildConfig.VERSION}" + "\n" +
                     "${ai.fd.thinklet.sdk.led.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.led.BuildConfig.VERSION}" + "\n" +
                     "${ai.fd.thinklet.sdk.maintenance.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.maintenance.BuildConfig.VERSION}"
-        Log.v(TAG, msg);
+        Log.v(TAG, msg)
     }
 }

@@ -20,3 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class  ai.fd.thinklet.syspropmanager.**{ public *;}
+-dontwarn android.os.ServiceManager
+
