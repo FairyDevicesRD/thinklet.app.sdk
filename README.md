@@ -7,6 +7,7 @@
     - [API Document](#api-document)
     - [MultiChannelAudioRecord](#multichannelaudiorecord)
     - [RawAudioRecordWrapper](#rawaudiorecordwrapper)
+    - [MicGainControl](#micgaincontrol)
   - [Camera](#camera)
     - [API Document](#api-document-1)
     - [Angle](#angle)
@@ -14,6 +15,7 @@
     - [API Document](#api-document-2)
     - [GestureSensorEventCallback](#gesturesensoreventcallback)
     - [GestureSensorManager](#gesturesensormanager)
+    - [(試験的機能) WearSensorManager](#試験的機能-wearsensormanager)
   - [Launcher Extension](#launcher-extension)
     - [API Document](#api-document-3)
     - [Extension](#extension)
@@ -23,8 +25,11 @@
   - [Power](#power)
     - [API Document](#api-document-5)
     - [Power](#power-1)
-  - [開発者モード](#開発者モード)
+  - [Language](#language)
     - [API Document](#api-document-6)
+    - [Language](#language-1)
+  - [開発者モード](#開発者モード)
+    - [API Document](#api-document-7)
     - [adb](#adb)
 - [プロジェクトでの利用方法](#プロジェクトでの利用方法)
   - [GitHub Packages経由](#github-packages経由)
@@ -91,6 +96,20 @@ fun do() {
 }
 ```
 
+### MicGainControl
+- マイクのゲインを調整する機能を提供します．
+- ゲインレベルはアプリごとではなく，全てのアプリで共有されます．したがって，他のアプリへ悪影響が出ないように，アプリ終了時には，`resetMicGain()` を呼び出すようにしてください．
+
+```
+private val micGainControl = MicGainControl(context)
+
+// increase gain
+micGainControl.micGain(18)
+
+// reset gain. (default:12)
+micGainControl.resetMicGain()
+```
+
 ## Camera
 ### API Document
 - [API](./thinklet/sdk/maintenance/dokka/index.md)
@@ -101,10 +120,12 @@ fun do() {
 
 ```
 val camAngle = Angle()
-if (camAngle.current() != "90") {
+if (camAngle.current() != 90) {
     val ret = camAngle.rotate_90()
 }
 ```
+
+- また，角度を意識しない場合は，`setLandscape`, `isLandscape`, `setPortrait`, `isPortrait` をご利用ください．
 
 ## Gesture
 ### API Document
@@ -142,6 +163,44 @@ fun start() {
 
 fun stop() {
     gestureSensorManager.stopTracking()
+}
+```
+
+### (試験的機能) WearSensorManager
+- THINKLETの装着状態のセンサーイベントを簡易的に扱うためのクラス．
+- 試験的機能となります．利用時には，`@OptIn(ExperimentalFeature::class)` を付与してください．
+- `WearSensorManager.IGyroscopeEvent` で，ジャイロセンサーをもとにしたイベントコールバックを提供します．
+  - 注意：`onSideBlurred` は，使い方によっては高頻度で通知されます．
+- `WearSensorManager.IProximityEvent` で，近接センサーをもとにしたイベントコールバックを提供します．
+
+```
+private val wearSensorManager = WearSensorManager(context)
+private val proximityEvent = object: WearSensorManager.IProximityEvent {
+    override fun onMounted() {
+        Log.i(TAG, "onMounted")
+    }
+
+    override fun onRemoved() {
+        Log.i(TAG, "onRemoved")
+    }
+
+}
+private val gyroscopeEvent = object: WearSensorManager.IGyroscopeEvent {
+    override fun onUpDownBlurred() {
+        Log.i(TAG, "onUpDownBlurred")
+    }
+
+    override fun onSideBlurred() {
+        Log.i(TAG, "onSideBlurred")
+    }
+}
+
+fun start() {
+    wearSensorManager.startTracking(proximityEvent, gyroscopeEvent)
+}
+
+fun stop() {
+    wearSensorManager.stopTracking()
 }
 ```
 
@@ -193,6 +252,18 @@ LedClient(context).updateCameraLed(false)
 ```
 Power().shutdown(context, wait = 30000 /* max wait 30s */)
 Power().reboot(context, wait = 100 /* soon reboot */)
+```
+
+## Language
+### API Document
+- [API](./thinklet/sdk/maintenance/dokka/index.md)
+### Language
+- 端末の言語設定を変更する機能を提供します．
+- 本機能で，切り替え可能な一覧は，`getAvailableLocales` より取得できます．
+
+```
+val lang = Language(context)
+lang.updateRequest(Locale.GERMAN)
 ```
 
 ## 開発者モード
