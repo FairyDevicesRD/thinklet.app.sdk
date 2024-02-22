@@ -5,16 +5,19 @@ plugins {
 
 android {
     namespace "ai.fd.thinklet.sample.using.sdk"
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId namespace
         minSdk 27
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -35,14 +38,15 @@ android {
 
 dependencies {
     // Thinklet app SDK
-    implementation 'ai.fd.thinklet:sdk-maintenance:0.0.5'
-    implementation 'ai.fd.thinklet:sdk-audio:0.0.4'
-    implementation 'ai.fd.thinklet:sdk-gesture:0.0.4'
-    implementation 'ai.fd.thinklet:sdk-led:0.0.3'
+    def sdk_version = "0.1.2"
+    implementation "ai.fd.thinklet:sdk-maintenance:$sdk_version"
+    implementation "ai.fd.thinklet:sdk-audio:$sdk_version"
+    implementation "ai.fd.thinklet:sdk-gesture:$sdk_version"
+    implementation "ai.fd.thinklet:sdk-led:$sdk_version"
 
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     testImplementation 'junit:junit:4.+'

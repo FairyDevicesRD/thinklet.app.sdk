@@ -1,9 +1,9 @@
-//[audio_v0.0.4](index.md)
+//[audio_v0.1.2](index.md)
 
-# audio_v0.0.4
+# audio_v0.1.2
 
 ## Packages
 
 | Name |
 |---|
-| [ai.fd.thinklet.sdk.audio](audio_v0.0.4/ai.fd.thinklet.sdk.audio/index.md) |
+| [ai.fd.thinklet.sdk.audio](audio_v0.1.2/ai.fd.thinklet.sdk.audio/index.md) |

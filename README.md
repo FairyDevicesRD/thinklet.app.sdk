@@ -8,6 +8,8 @@
     - [MultiChannelAudioRecord](#multichannelaudiorecord)
     - [RawAudioRecordWrapper](#rawaudiorecordwrapper)
     - [MicGainControl](#micgaincontrol)
+    - [VolumeControl](#volumecontrol)
+    - [Suppress SystemSound](#suppress-systemsound)
   - [Camera](#camera)
     - [API Document](#api-document-1)
     - [Angle](#angle)
@@ -38,6 +40,7 @@
   - [AARのバージョンの確認](#aarのバージョンの確認)
   - [プロジェクトを難読化する場合](#プロジェクトを難読化する場合)
     - [minifyEnabled](#minifyenabled)
+- [開発ロードマップ](#開発ロードマップ)
 
 # THINKLET App SDK
 THINKLET本体にインストールするアプリケーションに使用することができるSDKを提供します．
@@ -60,22 +63,28 @@ THINKLET本体にインストールするアプリケーションに使用する
 - [API](./thinklet/sdk/audio/dokka/index.md)
 ### MultiChannelAudioRecord
 - THINKLET本体の5chマイクへアクセスを行う `AudioRecord` を提供します．
+- オプションで，バッファサイズ，チャンネル数の指定，サンプリングレートの指定が可能です．
 
 ```.kt
 # 6ch(5ch + 1ch(=empty)), SamplingRate 48kHz
-val audioRecord = MultiChannelAudioRecord().get()
+val audioRecord = MultiChannelAudioRecord().get(Channel.CHANNEL_SIX, SampleRate.SAMPLING_RATE_48000).audioRecord
 ```
 
 ### RawAudioRecordWrapper
 - `AudioRecord`を簡易的に扱うためのクラス．
 - 録音結果を出力する `OutputStream`，結果を受け取る `IRawAudioRecorder` を提供します．
+- オプションで，参照音ありの6ch，参照音なしの5chで録音，サンプリングレートを指定，出力チャンネル数をモノラル(1ch)，ステレオ(2ch)に変換できます．
 
 ```.kt
 private val randomFileName: String
-    get() = "6ch_48kHz_${SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(Date())}.raw"
+    get() = "6ch_48kHz_${SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.getDefault()).format(Date())}.raw"
 private val rawFileOutputStream: FileOutputStream
-    get() = FileOutputStream(File(this.getExternalFilesDir(null), randomFileName))
-private var rawRecorder = RawAudioRecordWrapper()
+    get() = FileOutputStream(File(activity.getExternalFilesDir(null), randomFileName))
+private val rawRecorder = RawAudioRecordWrapper(
+    channel = MultiChannelAudioRecord.Channel.CHANNEL_SIX,
+    sampleRate = MultiChannelAudioRecord.SampleRate.SAMPLING_RATE_48000,
+    outputChannel =  RawAudioRecordWrapper.RawAudioOutputChannel.ORIGINAL
+)
 private val rawRecorderCallback = object : RawAudioRecordWrapper.IRawAudioRecorder {
     override fun onReceivedPcmData(pcmData: ByteArray) {
         Log.i(TAG, pcmData.size.toString())
@@ -89,7 +98,7 @@ private val rawRecorderCallback = object : RawAudioRecordWrapper.IRawAudioRecord
 //----
 
 fun do() {
-    if (!rawRecorder.prepare(this)) {
+    if (!rawRecorder.prepare(context)) {
         return
     }
     rawRecorder.start(rawFileOutputStream, rawRecorderCallback)
@@ -108,6 +117,47 @@ micGainControl.micGain(18)
 
 // reset gain. (default:12)
 micGainControl.resetMicGain()
+```
+
+### VolumeControl
+- 音量を段階的に変更する機能を提供します．
+- 変更するストリームについては，APIドキュメントを参照ください．
+
+> [!TIP]
+> この機能はFW 7.000.0以降で，利用可能です．
+
+```
+private val volumeCtrl = VolumeControl(context, lifecycle)
+volumeCtrl.enable()
+
+// enabled loop: stepUp volume. 0->1->2->3->0->1->...
+volumeCtrl.stepUp()
+// enabled loop: stepDown volume. 3->2->1->0->3->2->...
+volumeCtrl.stepDown()
+
+// disabled loop: stepUp volume. 0->1->2->3->3->3->...
+volumeCtrl.stepUp(enableLoop = false)
+// disabled loop: stepDown volume. 3->2->1->0->0->0->...
+volumeCtrl.stepDown(enableLoop = false)
+```
+
+### Suppress SystemSound
+- THINKLET固有のシステム音の再生を抑制します．
+  - e.g. 「オンラインになりました」を抑えます．
+
+> [!IMPORTANT]
+> この機能はFW 11.000.0以降で，利用可能になる予定です．
+> 2024年2月時点で，FW 11.000.0 は，リリースをしていません．
+
+```
+private val soundCtrl = SystemSound(context)
+
+// Suppress THINKLET's system sound
+soundCtrl.muteMild()
+// Minimize THINKLET's system sound
+soundCtrl.muteMinimum()
+// Remove suppress THINKLET system sound
+soundCtrl.reset()
 ```
 
 ## Camera
@@ -324,7 +374,7 @@ adbClient.disableAsync().thenAccept { disableResult ->
 ## AARのバージョンの確認
 - 各種AARの `BuildConfig.VERSION` を参照してください．
 ```
-var msg =
+val msg =
     "${ai.fd.thinklet.sdk.audio.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.audio.BuildConfig.VERSION}" + "\n" +
     "${ai.fd.thinklet.sdk.gesture.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.gesture.BuildConfig.VERSION}" + "\n" +
     "${ai.fd.thinklet.sdk.led.BuildConfig.LIBRARY_PACKAGE_NAME}: ${ai.fd.thinklet.sdk.led.BuildConfig.VERSION}" + "\n" +
@@ -342,3 +392,13 @@ Log.v(TAG, msg);
 #-renamesourcefileattribute SourceFile
 + -keep class  ai.fd.thinklet.syspropmanager.**{ public *;}
 ```
+
+# 開発ロードマップ
+- 開発中・または開発計画をしている機能です．なお，リリースを保証するものではありません．予告なく中止される可能性があります．
+
+  - ネットワーク(Wi-Fi/APN) CRUD API
+    - THINKLETのWi-Fi，APNのCRUD（追加・取得・更新・削除）
+  - Bluetooth CRUD API
+    - THINKLETと接続するBluetooth機器とのペアリング機能
+  - (汎用Android向けライブラリ) ローカルTHINKLET操作API
+    - THINKLETがオフラインでも，AndroidスマートフォンからTHINKLETを操作するライブラリ

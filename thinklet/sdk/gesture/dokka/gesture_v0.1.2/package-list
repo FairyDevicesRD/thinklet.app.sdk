@@ -1,0 +1,48 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:ai.fd.thinklet.sdk.gesture////PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/ExperimentalFeature///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-experimental-feature/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureDownToUp/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-down-to-up.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureLeftToRight/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-left-to-right.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureRightToLeft/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-right-to-left.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorEventCallback/onGestureUpToDown/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-event-callback/on-gesture-up-to-down.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/GestureSensorManager/#ai.fd.thinklet.sdk.gesture.GestureSensorEventCallback/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/-gesture-sensor-manager.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/startTracking/#android.content.Context/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/start-tracking.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/GestureSensorManager/stopTracking/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-gesture-sensor-manager/stop-tracking.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.Config///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-config/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.Config/Config/#ai.fd.thinklet.sdk.gesture.WearSensorManager.ProximityConfig#ai.fd.thinklet.sdk.gesture.WearSensorManager.GyroConfig/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-config/-config.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.Config/gyroConfig/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-config/gyro-config.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.Config/proximityConfig/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-config/proximity-config.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroConfig///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-config/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroConfig/GyroConfig/#kotlin.Int#ai.fd.thinklet.sdk.gesture.WearSensorManager.GyroSensitivity/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-config/-gyro-config.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroConfig/sampleData/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-config/sample-data.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroConfig/sensitivity/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-config/sensitivity.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity.HIGH///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/-h-i-g-h/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity.LOW///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/-l-o-w/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity.MIDDLE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/-m-i-d-d-l-e/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity.VERY_HIGH///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/-v-e-r-y_-h-i-g-h/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity.VERY_LOW///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/-v-e-r-y_-l-o-w/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity/entries/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/entries.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity/sd/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/sd.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity/valueOf/#kotlin.String/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/value-of.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.GyroSensitivity/values/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-gyro-sensitivity/values.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IGyroscopeEvent///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-gyroscope-event/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IGyroscopeEvent/onSideBlurred/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-gyroscope-event/on-side-blurred.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IGyroscopeEvent/onUpDownBlurred/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-gyroscope-event/on-up-down-blurred.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IProximityEvent///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-proximity-event/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IProximityEvent/onMounted/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-proximity-event/on-mounted.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.IProximityEvent/onRemoved/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-i-proximity-event/on-removed.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.ProximityConfig///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-proximity-config/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.ProximityConfig/ProximityConfig/#kotlin.Long/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-proximity-config/-proximity-config.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager.ProximityConfig/bufferMillTime/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-proximity-config/buffer-mill-time.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager///PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/index.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager/WearSensorManager/#android.content.Context#ai.fd.thinklet.sdk.gesture.WearSensorManager.Config/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/-wear-sensor-manager.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager/onAccuracyChanged/#android.hardware.Sensor?#kotlin.Int/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/on-accuracy-changed.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager/onSensorChanged/#android.hardware.SensorEvent?/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/on-sensor-changed.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager/startTracking/#ai.fd.thinklet.sdk.gesture.WearSensorManager.IProximityEvent?#ai.fd.thinklet.sdk.gesture.WearSensorManager.IGyroscopeEvent?/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/start-tracking.md
+$dokka.location:ai.fd.thinklet.sdk.gesture/WearSensorManager/stopTracking/#/PointingToDeclaration/gesture_v0.1.2/ai.fd.thinklet.sdk.gesture/-wear-sensor-manager/stop-tracking.md
+ai.fd.thinklet.sdk.gesture
+
