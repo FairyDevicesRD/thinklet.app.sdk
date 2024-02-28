@@ -1,7 +1,10 @@
 package ai.fd.thinklet.sample.using.sdk
 
+import ai.fd.thinklet.sample.using.sdk.databinding.ActivityMainBinding
 import ai.fd.thinklet.sdk.audio.MicGainControl
+import ai.fd.thinklet.sdk.audio.MultiChannelAudioRecord
 import ai.fd.thinklet.sdk.audio.RawAudioRecordWrapper
+import ai.fd.thinklet.sdk.audio.VolumeControl
 import ai.fd.thinklet.sdk.gesture.ExperimentalFeature
 import ai.fd.thinklet.sdk.gesture.GestureSensorEventCallback
 import ai.fd.thinklet.sdk.gesture.GestureSensorManager
@@ -24,53 +27,35 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
     private companion object {
         private const val TAG = "${BuildConfig.APPLICATION_ID}_SDK_Sample"
         private const val REQUEST_CODE = 1000
     }
 
-    private val buttonExtensionDefault
-        get() = findViewById<Button>(R.id.button_extension_default)
-    private val buttonExtensionThisApp
-        get() = findViewById<Button>(R.id.button_extension_this_app)
-
-    private val spinnerCameraAngles
-        get() = findViewById<Spinner>(R.id.spinner_camera_angles)
-    private val buttonCameraUpdate
-        get() = findViewById<Button>(R.id.button_camera_angle)
-    private val buttonCameraPortrait
-        get() = findViewById<Button>(R.id.button_camera_portrait)
-    private val buttonCameraLandscape
-        get() = findViewById<Button>(R.id.button_camera_landscape)
-
-    private val spinnerLanguages
-        get() = findViewById<Spinner>(R.id.spinner_languages)
-    private val buttonLanguageUpdate
-        get() = findViewById<Button>(R.id.button_update_language)
-
-    private val textviewGesture
-        get() = findViewById<TextView>(R.id.textview_gesture)
-    private val textviewWearing
-        get() = findViewById<TextView>(R.id.textview_wearing)
-
-    private val buttonShutdown
-        get() = findViewById<Button>(R.id.button_shutdown)
-    private val buttonReboot
-        get() = findViewById<Button>(R.id.button_reboot)
-
     // audio
     private val randomFileName: String
-        @SuppressLint("SimpleDateFormat")
-        get() = "6ch_48kHz_${SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(Date())}.raw"
+        get() = "6ch_48kHz_${
+            SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.getDefault()).format(
+                Date()
+            )
+        }.raw"
     private val rawFileOutputStream: FileOutputStream
         get() = FileOutputStream(File(this.getExternalFilesDir(null), randomFileName))
-    private var rawRecorder = RawAudioRecordWrapper()
+    private val rawRecorder = RawAudioRecordWrapper(
+        channel = MultiChannelAudioRecord.Channel.CHANNEL_SIX,
+        sampleRate = MultiChannelAudioRecord.SampleRate.SAMPLING_RATE_48000,
+        outputChannel = RawAudioRecordWrapper.RawAudioOutputChannel.ORIGINAL
+    )
     private val rawRecorderCallback = object : RawAudioRecordWrapper.IRawAudioRecorder {
         override fun onReceivedPcmData(pcmData: ByteArray) {
             Log.i(TAG, pcmData.size.toString())
@@ -81,27 +66,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // volume
+    private val volumeCtrl: VolumeControl by lazy {
+        VolumeControl(
+            context = this,
+            lifecycle = this.lifecycle
+        )
+    }
+    private val volumeReceiver: IVolumeReceiver by lazy {
+        VolumeReceiverImpl(
+            context = this,
+            lifecycle = this.lifecycle
+        )
+    }
+
     // gesture
     private val gestureSensorManager =
         GestureSensorManager(object : GestureSensorEventCallback {
             override fun onGestureUpToDown() {
                 Log.i(TAG, "onGestureUpToDown")
-                textviewGesture.text = "⇣"
+                binding.textviewGesture.text = "⇣"
             }
 
             override fun onGestureDownToUp() {
                 Log.i(TAG, "onGestureDownToUp")
-                textviewGesture.text = "⇡"
+                binding.textviewGesture.text = "⇡"
             }
 
             override fun onGestureRightToLeft() {
                 Log.i(TAG, "onGestureRightToLeft")
-                textviewGesture.text = "⇠"
+                binding.textviewGesture.text = "⇠"
             }
 
             override fun onGestureLeftToRight() {
                 Log.i(TAG, "onGestureLeftToRight")
-                textviewGesture.text = "⇢"
+                binding.textviewGesture.text = "⇢"
             }
         })
 
@@ -115,13 +114,13 @@ class MainActivity : AppCompatActivity() {
         object : WearSensorManager.IProximityEvent, WearSensorManager.IGyroscopeEvent {
             override fun onMounted() {
                 runOnUiThread {
-                    textviewWearing.text = "onMounted"
+                    binding.textviewWearing.text = "onMounted"
                 }
             }
 
             override fun onRemoved() {
                 runOnUiThread {
-                    textviewWearing.text = "onRemoved"
+                    binding.textviewWearing.text = "onRemoved"
                 }
             }
 
@@ -134,7 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         dumpVersions()
         registerEvent()
@@ -249,7 +248,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun registerEvent() {
         // Launcher Extension //
-        buttonExtensionDefault.setOnClickListener {
+        binding.buttonExtensionDefault.setOnClickListener {
             Extension().configure(
                 "com.android.deskclock",
                 "com.android.deskclock.DeskClock"
@@ -258,7 +257,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "${Extension().configure()}", Toast.LENGTH_SHORT).show()
         }
 
-        buttonExtensionThisApp.setOnClickListener {
+        binding.buttonExtensionThisApp.setOnClickListener {
             Extension().configure(
                 this.packageName,
                 "${this.packageName}.${MainActivity::class.java.simpleName}"
@@ -272,17 +271,17 @@ class MainActivity : AppCompatActivity() {
         val adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, angles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCameraAngles.adapter = adapter
+        binding.spinnerCameraAngles.adapter = adapter
 
         val idx = angles.indexOf(Angle().current().toString())
         if (idx == -1) {
-            spinnerCameraAngles.setSelection(1)
+            binding.spinnerCameraAngles.setSelection(1)
         } else {
-            spinnerCameraAngles.setSelection(idx)
+            binding.spinnerCameraAngles.setSelection(idx)
         }
 
-        buttonCameraUpdate.setOnClickListener {
-            when (angles[spinnerCameraAngles.selectedItemPosition]) {
+        binding.buttonCameraAngle.setOnClickListener {
+            when (angles[binding.spinnerCameraAngles.selectedItemPosition]) {
                 "0" -> Angle().rotate0()
                 "90" -> Angle().rotate90()
                 "180" -> Angle().rotate180()
@@ -292,23 +291,23 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, Angle().current().toString(), Toast.LENGTH_SHORT).show()
         }
 
-        buttonCameraPortrait.setOnClickListener {
+        binding.buttonCameraPortrait.setOnClickListener {
             Angle().setPortrait()
             if (!Angle().isPortrait()) {
                 return@setOnClickListener
             }
             val ang = Angle().current().toString()
-            spinnerCameraAngles.setSelection(angles.indexOf(ang))
+            binding.spinnerCameraAngles.setSelection(angles.indexOf(ang))
             Toast.makeText(this, ang, Toast.LENGTH_SHORT).show()
         }
 
-        buttonCameraLandscape.setOnClickListener {
+        binding.buttonCameraLandscape.setOnClickListener {
             Angle().setLandscape()
             if (!Angle().isLandscape()) {
                 return@setOnClickListener
             }
             val ang = Angle().current().toString()
-            spinnerCameraAngles.setSelection(angles.indexOf(ang))
+            binding.spinnerCameraAngles.setSelection(angles.indexOf(ang))
             Toast.makeText(this, ang, Toast.LENGTH_SHORT).show()
         }
 
@@ -321,22 +320,38 @@ class MainActivity : AppCompatActivity() {
                 android.R.layout.simple_spinner_dropdown_item,
                 locales.map { it.displayLanguage })
         adapterLang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerLanguages.adapter = adapterLang
+        binding.spinnerLanguages.adapter = adapterLang
         val id = locales.indexOf(Locale.getDefault())
         if (id > 0) {
-            spinnerLanguages.setSelection(id)
+            binding.spinnerLanguages.setSelection(id)
         }
-        buttonLanguageUpdate.setOnClickListener {
-            langClient.updateRequest(locales[spinnerLanguages.selectedItemPosition])
+        binding.buttonUpdateLanguage.setOnClickListener {
+            langClient.updateRequest(locales[binding.spinnerLanguages.selectedItemPosition])
         }
 
         // Power //
-        buttonReboot.setOnClickListener {
+        binding.buttonReboot.setOnClickListener {
             PowerController().reboot(this)
         }
 
-        buttonShutdown.setOnClickListener {
+        binding.buttonShutdown.setOnClickListener {
             PowerController().shutdown(this)
+        }
+
+        // volume //
+        volumeReceiver.enable()
+        volumeCtrl.enable()
+        binding.seekVolume.isEnabled = false
+        lifecycleScope.launch {
+            volumeReceiver.volumeFlow.collect {
+                binding.seekVolume.progress = it
+            }
+        }
+        binding.buttonVolumeStepUp.setOnClickListener {
+            volumeCtrl.stepUp()
+        }
+        binding.buttonVolumeStepDown.setOnClickListener {
+            volumeCtrl.stepDown()
         }
     }
 

@@ -1,0 +1,8 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:ai.fd.thinklet.sdk.led////PointingToDeclaration/led_v0.1.2/ai.fd.thinklet.sdk.led/index.md
+$dokka.location:ai.fd.thinklet.sdk.led/LedClient///PointingToDeclaration/led_v0.1.2/ai.fd.thinklet.sdk.led/-led-client/index.md
+$dokka.location:ai.fd.thinklet.sdk.led/LedClient/LedClient/#android.content.Context/PointingToDeclaration/led_v0.1.2/ai.fd.thinklet.sdk.led/-led-client/-led-client.md
+$dokka.location:ai.fd.thinklet.sdk.led/LedClient/updateCameraLed/#kotlin.Boolean/PointingToDeclaration/led_v0.1.2/ai.fd.thinklet.sdk.led/-led-client/update-camera-led.md
+ai.fd.thinklet.sdk.led
+
