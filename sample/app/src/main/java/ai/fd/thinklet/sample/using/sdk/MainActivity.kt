@@ -23,7 +23,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -32,7 +33,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -65,6 +67,17 @@ class MainActivity : AppCompatActivity() {
             Log.w(TAG, throwable.message.toString())
         }
     }
+
+    // xfe
+    private val simpleXfeRecord by lazy { SimpleXfeRecord(this) }
+    private val xfeFile: File
+        get() = File(
+            this.getExternalFilesDir(null), "XFE_1ch_48kHz_${
+                SimpleDateFormat("yyyy-MM-dd-hh-mm-ss", Locale.getDefault()).format(
+                    Date()
+                )
+            }.raw"
+        )
 
     // volume
     private val volumeCtrl: VolumeControl by lazy {
@@ -352,6 +365,23 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonVolumeStepDown.setOnClickListener {
             volumeCtrl.stepDown()
+        }
+
+        // xfe //
+        val scope = lifecycleScope
+        binding.buttonXfeRecord.setOnClickListener {
+            binding.buttonXfeRecord.isEnabled = false
+            scope.launch {
+                val file = xfeFile
+                file.createNewFile()
+                val result = simpleXfeRecord.tryRecord(file)
+                Toast.makeText(
+                    this@MainActivity,
+                    "XFE record=${result.name} file=${file.absoluteFile}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.buttonXfeRecord.isEnabled = true
+            }
         }
     }
 

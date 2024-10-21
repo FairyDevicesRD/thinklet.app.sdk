@@ -10,6 +10,7 @@
     - [MicGainControl](#micgaincontrol)
     - [VolumeControl](#volumecontrol)
     - [Suppress SystemSound](#suppress-systemsound)
+    - [(試験的機能) ThinkletXfe](#試験的機能-thinkletxfe)
   - [Camera](#camera)
     - [API Document](#api-document-1)
     - [Angle](#angle)
@@ -145,9 +146,8 @@ volumeCtrl.stepDown(enableLoop = false)
 - THINKLET固有のシステム音の再生を抑制します．
   - e.g. 「オンラインになりました」を抑えます．
 
-> [!IMPORTANT]
-> この機能はFW 11.000.0以降で，利用可能になる予定です．
-> 2024年2月時点で，FW 11.000.0 は，リリースをしていません．
+> [!TIP]
+> この機能はFW 11.000.0以降で，利用可能です．
 
 ```
 private val soundCtrl = SystemSound(context)
@@ -158,6 +158,50 @@ soundCtrl.muteMild()
 soundCtrl.muteMinimum()
 // Remove suppress THINKLET system sound
 soundCtrl.reset()
+```
+
+### (試験的機能) ThinkletXfe
+- THINKLETのOSに実装したXFEを有効化する機能を提供します．
+- 5chマイクの参照音なしで動作します．エコーキャンセル機能については，FairyDevicesまでお問い合わせください．
+
+> [!TIP]
+> この機能はFW 11.000.0以降で，利用可能です．
+
+> [!IMPORTANT]
+> この機能は，試験的機能です．予期せぬエラー，APIの変更が発生することがあります．  
+> また，THINKLET cube モデルはサポートしていません．
+
+```
+private val am = context.getSystemService(AudioManager::class.java)
+private val xfeCtl = ThinkletXfe()
+
+// enable xfe
+if (!xfeCtl.configureXfe(audioManager = am, xfeEnable = true)) {
+    return
+}
+val audioRecord = AudioRecord.Builder()
+    .setAudioSource(AudioSource.MIC)
+    .setAudioFormat(
+        AudioFormat.Builder()
+            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+            .setSampleRate(48000) // or 16000
+            .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
+            .build()
+    )
+    .setBufferSizeInBytes(1920)
+    .build()
+// check xfe mode.
+if (!audioRecord.canXfeRecord()) {
+    audioRecord.release()
+    return
+}
+
+audioRecord.startRecording()
+// do something
+
+audioRecord.stop()
+audioRecord.release()
+xfeCtl.configureXfe(audioManager = am, xfeEnable = false)
 ```
 
 ## Camera
