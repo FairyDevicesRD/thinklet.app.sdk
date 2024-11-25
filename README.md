@@ -10,7 +10,7 @@
     - [MicGainControl](#micgaincontrol)
     - [VolumeControl](#volumecontrol)
     - [Suppress SystemSound](#suppress-systemsound)
-    - [(試験的機能) ThinkletXfe](#試験的機能-thinkletxfe)
+    - [(試験的機能) 音声処理](#試験的機能-音声処理)
   - [Camera](#camera)
     - [API Document](#api-document-1)
     - [Angle](#angle)
@@ -160,9 +160,16 @@ soundCtrl.muteMinimum()
 soundCtrl.reset()
 ```
 
-### (試験的機能) ThinkletXfe
-- THINKLETのOSに実装したXFEを有効化する機能を提供します．
-- 5chマイクの参照音なしで動作します．エコーキャンセル機能については，FairyDevicesまでお問い合わせください．
+### (試験的機能) 音声処理
+- 弊社の音声処理技術を活用した装着者の音声を強調するようにマイクの設定を行います．
+
+| ![音声強調のイメージ](https://mimi.fairydevices.jp/img/technology/edge/xfe/bf/img_01.png) |
+| :---------------------------------------------------------------------------------------: |
+|                                    音声強調のイメージ                                     |
+
+> [!NOTE]
+> FairyDevicesの音声処理技術については，[こちら](https://mimi.fairydevices.jp/technology/edge/xfe/)をご参照ください．  
+> 本機能では，[ビームフォーマ](https://mimi.fairydevices.jp/technology/edge/xfe/bf/) のみ提供し，装着者方向の音声のみを強調，その他の周辺の音声を抑えます．
 
 > [!TIP]
 > この機能はFW 11.000.0以降で，利用可能です．
