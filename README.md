@@ -14,6 +14,8 @@
   - [Camera](#camera)
     - [API Document](#api-document-1)
     - [Angle](#angle)
+  - [CameraX拡張機能](#camerax拡張機能)
+    - [CameraX + ThinkletMic](#camerax--thinkletmic)
   - [Gesture](#gesture)
     - [API Document](#api-document-2)
     - [GestureSensorEventCallback](#gesturesensoreventcallback)
@@ -227,6 +229,40 @@ if (camAngle.current() != 90) {
 ```
 
 - また，角度を意識しない場合は，`setLandscape`, `isLandscape`, `setPortrait`, `isPortrait` をご利用ください．
+
+## CameraX拡張機能
+### CameraX + ThinkletMic
+- CameraX の [androidx.camera.video](https://developer.android.com/reference/kotlin/androidx/camera/video/package-summary) をフォークし，音声周りをカスタマイズできるようにしました．
+
+> [!NOTE]
+> 本機能は，THINKLET App SDKに含みません．サンプルやご利用方法については，[thinklet.camerax.mic](https://github.com/FairyDevicesRD/thinklet.camerax.mic) をご確認ください．
+
+- 通常のCameraXの [Recorder](https://developer.android.com/reference/kotlin/androidx/camera/video/Recorder) では，マイクに関する機能は，CameraX内部に隠蔽されており，開発者が選ぶことはできません．  
+この機能により，例えば，THINKLETの５つのマイクをすべて使い，装着者の音声を強調して録音できます．  
+また，次のような音を使用するケースも理論上実現可能です．
+    - 「人の声を検出しているときの音」（サンプルあり）  
+    - 「音声認識し，それを合成音声した音」  
+    - 「BGMを追加した音」
+- 利用するには，すでにCameraXのRecorderを利用している場合は，ライブラリの導入と，`Recorder.Builder` に `setThinkletMic` を追加します．
+  - 5chマイクで録音する
+  ```diff
+  val recorder = Recorder.Builder()
+      .setExecutor(recorderExecutor)
+      .setQualitySelector(QualitySelector.from(Quality.FHD))
+  +   .setThinkletMic(ThinkletMics.FiveCh)
+      .build()
+  ```
+  - また，[本SDKの音声処理機能](#試験的機能-音声処理) にも対応しています．
+  ```diff
+  val recorder = Recorder.Builder()
+      .setExecutor(recorderExecutor)
+      .setQualitySelector(QualitySelector.from(Quality.FHD))
+  +   .setThinkletMic(ThinkletMics.Xfe(audioManager))
+      .build()
+  ```
+
+> [!TIP]
+> 一部機能については，一般的なAndroidデバイスでも動作できることを確認していますが，積極的なサポートはしておりません．
 
 ## Gesture
 ### API Document
